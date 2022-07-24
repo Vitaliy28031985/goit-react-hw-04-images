@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 import {mapperImmage} from 'components/utils/mapper'
 import fetchImages from 'components/Api/Api';
 import {Searchbar} from 'components/Searchbar/Searchbar';

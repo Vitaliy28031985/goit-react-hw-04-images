@@ -1,47 +1,43 @@
-import React from "react";
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import s from './Modal.module.css';
 
 
-export class Modal extends React.Component { 
+export const Modal = ({onModal, poster, images}) => { 
  
-  static propTypes = {
-    onModal: PropTypes.func.isRequired,
-    poster: PropTypes.string.isRequired,
-   images: PropTypes.array.isRequired,
-  };
-
-   componentDidMount() {
-      window.addEventListener('keydown', this.handleKeyDown);
+useEffect(() => {
+  window.addEventListener('keydown', handleKeyDown);
+ return () => {
+    window.removeEventListener('keydown', handleKeyDown); 
+  } 
+});
+   
+const handleKeyDown = e => {
+  if (e.code === 'Escape') {
+   onModal();
    }
-   componentWillUnmount() {
-      window.removeEventListener('keydown', this.handleKeyDown);
-    }
+   };
   
-    handleKeyDown = e => {
-      if (e.code === 'Escape') {
-        this.props.onModal();
-      }
-    };
-  
-    handleBackdropClick = e => {
-      if (e.currentTarget === e.target) {
-        this.props.onModal();
-      }
-    };
-
-    render() {
-      const {poster, images, closeModal} = this.props;
-  
+const handleBackdropClick = e => {
+  if (e.currentTarget === e.target) {
+   onModal();
+   }
+   };
+ 
       return (
-        <div className={s.Overlay} onClick={this.handleBackdropClick}>
+        <div className={s.Overlay} onClick={handleBackdropClick}>
           <div className={s.Modal}>
           <img
-          onModal={closeModal}
+          onClick={onModal}
           src={poster} alt={images.tags} />
           </div>
         </div>
-      )
-    }
+      )   
 }
 
+
+Modal.propTypes = {
+  onModal: PropTypes.func.isRequired,
+  poster: PropTypes.string.isRequired,
+  images: PropTypes.array.isRequired,  
+}
