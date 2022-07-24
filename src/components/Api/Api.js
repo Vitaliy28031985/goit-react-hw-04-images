@@ -15,4 +15,3 @@ return  fetch(`${url}${fetchEl}`).then(response => {
    return Promise.reject(new Error('Nothing was found for your request'));})
 
 }
-//async  await

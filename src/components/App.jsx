@@ -1,4 +1,5 @@
-import React from "react";
+import { useState, useEffect } from 'react';
+
 import {mapperImmage} from 'components/utils/mapper'
 import fetchImages from 'components/Api/Api';
 import {Searchbar} from 'components/Searchbar/Searchbar';
@@ -18,71 +19,61 @@ const Status = {
 };
 
 
-export class App extends React.Component {
-  state = {
-  
-  isLoader: false,
-  error: null,
-  status: 'idle',
-  imgValue: '',
-  page: 1,
-  images: [],
-  largeImageURL: ''
-  }
+export const App = () => {
+ 
+
+const [isLoader, setIsLoader] = useState(false);
+const [error, setError] = useState(null);
+const [status, setStatus] = useState('idle');
+const [imgValue, setImgValue] = useState('');
+const [page, setPage] = useState(1);
+const [images, setImages] = useState([]);
+const [largeImageURL, setLargeImageURL] = useState('');
 
 
-  
-  componentDidUpdate(_, prevState) {
-const prevPage = prevState.page;
-const nextPage = this.state.page;
-const prevValue = prevState.imgValue;
-const nextValue = this.state.imgValue;
-const {page, imgValue} = this.state;
-
-  if(prevValue !== nextValue || prevPage !== nextPage) {
-    
-    this.setState({ status: 'pending'});
-    this.renderImages(imgValue, page);
-    
-  }
+useEffect(() => {
+if(imgValue !== '') {
+renderImages(imgValue, page);
 }
 
-handleFormSubmit = imgValue => {
-    this.setState({imgValue,  page: 1, images: [] });
+}, [imgValue, page]);
+
+const renderImages = (imgValue, page) => {
+  setIsLoader(true);
+  fetchImages(imgValue, page)
+  .then(response => 
+  setImages(state => [...state, ...mapperImmage(response.hits)])
+  )
+
+   .catch(error => {setError(error);
+   setStatus(Status.REJECTED);})
+   .finally(() => { setStatus(Status.RESOLVED);
+    setIsLoader(false);
+  });
+  }
+
+
+const handleFormSubmit = newImgValue => {
+  if(newImgValue === imgValue) {
+    return;
+  }
+  setImgValue(newImgValue);
+  setPage(1);
+  setImages([]);
   };
 
-renderImages = (imgValue, page) => {
-const fetch = fetchImages(imgValue, page);
-this.setState({ isLoader: true });
-fetch
-.then(response => 
-  this.setState(prevState => ({
-    images: [...prevState.images, ...mapperImmage(response.hits)], 
- }), 
- ))
- .catch(error => this.setState({ error, status: Status.REJECTED }))
- .finally(() => this.setState({ status: Status.RESOLVED,  isLoader: false}));
-}
 
-
-changePage = () => {
-  this.setState((prevState) => 
-  ({page: prevState.page + 1}));
+const changePage = () => {
+  setPage(prevState => prevState +1);
 };
 
-openModal = (largeImageURL) => {
-  this.setState({largeImageURL})
-
+const openModal = (largeImageURL) => {
+  setLargeImageURL(largeImageURL);
 }
 
-closeModal = () => {
-  this.setState({largeImageURL: ''})
+const closeModal = () => {
+  setLargeImageURL('');
 }
-
-  render() {
-
-  const { status, error, images, isLoader, largeImageURL } = this.state;
-  const { handleFormSubmit,  openModal, changePage, closeModal} = this;
 
   return (
     <>    
@@ -101,6 +92,7 @@ closeModal = () => {
 </>  )}
 {largeImageURL && <Modal poster={largeImageURL} images={images} onModal={closeModal}/>}
 </>
-  );}
+  );
+
 };
 
