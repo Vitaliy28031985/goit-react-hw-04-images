@@ -1,42 +1,32 @@
 
-import React, { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ImSearch } from "react-icons/im";
 import s from './Searchbar.module.css';
 
-export class Searchbar extends Component {
+export const Searchbar = ({onSubmit}) => {
 
-   state = {
-   imgValue: '',
-   }
-
-   static propTypes = {
-      onSubmit: PropTypes.func.isRequired,
-    };
-
-   handleChange = e => {
-   this.setState({imgValue: e.currentTarget.value.toLowerCase()});
-   }
-   
   
-   handleSubmit = e => {
-   e.preventDefault();
-   const {imgValue} = this.state;
-
+const [imgValue, setImgValue] = useState('')
+ 
+const handleChange = e => {
+setImgValue(e.currentTarget.value.toLowerCase());
+}
+    
+const handleSubmit = e => {
+e.preventDefault();
+   
   if(imgValue.trim() === '') {
    toast("Enter text");
     return;
   }
-
-   this.props.onSubmit(imgValue);
-   this.setState({ imgValue: '' });
+   onSubmit(imgValue);
+   setImgValue('');
    }
 
 
-   render() {
-    const {handleSubmit, handleChange} = this;
    return (
     <>
 <header className={s.Searchbar}>
@@ -46,7 +36,6 @@ export class Searchbar extends Component {
         style={{marginRight: 8}} />
          <span className={s.buttonLabel}>Search</span>
             </button>
-    
                 <input
                 className={s.input}
                 type='text'
@@ -65,7 +54,9 @@ export class Searchbar extends Component {
       draggable
       pauseOnHover/>
 </header>
-</>
-   )
-  }
+</>)
  };
+
+ Searchbar.propTypes = {
+   onSubmit: PropTypes.func.isRequired,
+ }

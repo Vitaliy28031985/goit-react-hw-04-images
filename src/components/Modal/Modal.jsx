@@ -6,10 +6,10 @@ import s from './Modal.module.css';
 export const Modal = ({onModal, poster, images}) => { 
  
 useEffect(() => {
-  window.addEventListener('keydown', handleKeyDown);
- return () => {
-    window.removeEventListener('keydown', handleKeyDown); 
-  } 
+window.addEventListener('keydown', handleKeyDown);
+return () => {
+window.removeEventListener('keydown', handleKeyDown);
+} 
 });
    
 const handleKeyDown = e => {

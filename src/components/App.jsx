@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import {mapperImmage} from 'components/utils/mapper'
 import fetchImages from 'components/Api/Api';
 import {Searchbar} from 'components/Searchbar/Searchbar';
@@ -92,6 +93,11 @@ const closeModal = () => {
 {largeImageURL && <Modal poster={largeImageURL} images={images} onModal={closeModal}/>}
 </>
   );
+};
 
+App.propTypes = {
+  imgValue: PropTypes.string,
+  page: PropTypes.number,
+  images: PropTypes.array,
 };
 
