@@ -7,7 +7,7 @@ export const LoaderComponent = () => {
       return (
         <div className="loader" 
         style={{
-          height: '50vh',
+          height: '5vh',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
