@@ -80,7 +80,6 @@ const closeModal = () => {
 <Searchbar onSubmit={handleFormSubmit}/>
 {status === Status.IDLE && (
 <p>Please enter your search term</p> )}
-{isLoader && <LoaderComponent />}
 {status === Status.REJECTED && (
 <MessageError message={error.message}/>
 )}
@@ -91,6 +90,7 @@ const closeModal = () => {
  />
 </>  )}
 {largeImageURL && <Modal poster={largeImageURL} images={images} onModal={closeModal}/>}
+{isLoader && <LoaderComponent />}
 </>
   );
 };
